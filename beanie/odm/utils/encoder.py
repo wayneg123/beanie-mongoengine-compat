@@ -44,7 +44,7 @@ DEFAULT_CUSTOM_ENCODERS: MutableMapping[type, SingleArgCallable] = {
     datetime.date: lambda d: datetime.datetime.combine(d, datetime.time.min),
     datetime.timedelta: operator.methodcaller("total_seconds"),
     enum.Enum: operator.attrgetter("value"),
-    Link: operator.attrgetter("ref"),
+    Link: lambda link: link.ref,
     bytes: bson.Binary,
     decimal.Decimal: bson.Decimal128,
     uuid.UUID: bson.Binary.from_uuid,

@@ -30,7 +30,7 @@ def convert_ids(
             if fetch_links:
                 new_k = f"{k_splitted[0]}._id"
             else:
-                new_k = f"{k_splitted[0]}.$id"
+                new_k = f"{k_splitted[0]}"
         else:
             new_k = k
         new_v: Any

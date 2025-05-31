@@ -20,7 +20,7 @@ from typing import (
 )
 from uuid import UUID, uuid4
 
-from bson import DBRef, ObjectId
+from bson import ObjectId
 from lazy_model import LazyModel
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from pydantic import (
@@ -1169,7 +1169,7 @@ class Document(
     def to_ref(self):
         if self.id is None:
             raise DocumentWasNotSaved("Can not create dbref without id")
-        return DBRef(self.get_motor_collection().name, self.id)
+        return self.id
 
     async def fetch_link(self, field: Union[str, Any]):
         ref_obj = getattr(self, field, None)
@@ -1210,8 +1210,7 @@ class Document(
 
     @classmethod
     def link_from_id(cls, id: Any):
-        ref = DBRef(id=id, collection=cls.get_collection_name())
-        return Link(ref, document_class=cls)
+        return Link(id, document_class=cls)
 
     @classmethod
     def bulk_writer(

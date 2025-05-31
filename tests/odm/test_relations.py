@@ -941,7 +941,7 @@ class TestBuildAggregations:
             ]
         )
         assert aggregation.get_aggregation_pipeline() == [
-            {"$match": {"door.$id": door.id}},
+            {"$match": {"door": door.id}},
             {"$group": {"_id": "$height", "count": {"$sum": 1}}},
         ]
         result = await aggregation.to_list()

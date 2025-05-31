@@ -54,7 +54,7 @@ def construct_query(
                 {
                     "$lookup": {
                         "from": link_info.document_class.get_motor_collection().name,  # type: ignore
-                        "localField": f"{link_info.lookup_field_name}.$id",
+                        "localField": f"{link_info.lookup_field_name}",
                         "foreignField": "_id",
                         "as": f"_link_{link_info.field_name}",
                     }
@@ -103,7 +103,7 @@ def construct_query(
                     "$lookup": {
                         "from": link_info.document_class.get_motor_collection().name,  # type: ignore
                         "let": {
-                            "link_id": f"${link_info.lookup_field_name}.$id"
+                            "link_id": f"${link_info.lookup_field_name}"
                         },
                         "as": f"_link_{link_info.field_name}",
                         "pipeline": [
@@ -161,7 +161,7 @@ def construct_query(
                     "$lookup": {
                         "from": link_info.document_class.get_motor_collection().name,  # type: ignore
                         "localField": "_id",
-                        "foreignField": f"{link_info.lookup_field_name}.$id",
+                        "foreignField": f"{link_info.lookup_field_name}",
                         "as": f"_link_{link_info.field_name}",
                     }
                 },
@@ -215,7 +215,7 @@ def construct_query(
                                 "$match": {
                                     "$expr": {
                                         "$eq": [
-                                            f"${link_info.lookup_field_name}.$id",
+                                            f"${link_info.lookup_field_name}",
                                             "$$link_id",
                                         ]
                                     }
@@ -269,7 +269,7 @@ def construct_query(
                 {
                     "$lookup": {
                         "from": link_info.document_class.get_motor_collection().name,  # type: ignore
-                        "localField": f"{link_info.lookup_field_name}.$id",
+                        "localField": f"{link_info.lookup_field_name}",
                         "foreignField": "_id",
                         "as": link_info.field_name,
                     }
@@ -291,7 +291,7 @@ def construct_query(
             lookup_step = {
                 "$lookup": {
                     "from": link_info.document_class.get_motor_collection().name,  # type: ignore
-                    "let": {"link_id": f"${link_info.lookup_field_name}.$id"},
+                    "let": {"link_id": f"${link_info.lookup_field_name}"},
                     "as": link_info.field_name,
                     "pipeline": [
                         {"$match": {"$expr": {"$in": ["$_id", "$$link_id"]}}},
@@ -320,7 +320,7 @@ def construct_query(
                     "$lookup": {
                         "from": link_info.document_class.get_motor_collection().name,  # type: ignore
                         "localField": "_id",
-                        "foreignField": f"{link_info.lookup_field_name}.$id",
+                        "foreignField": f"{link_info.lookup_field_name}",
                         "as": link_info.field_name,
                     }
                 }
@@ -349,7 +349,7 @@ def construct_query(
                                 "$expr": {
                                     "$in": [
                                         "$$link_id",
-                                        f"${link_info.lookup_field_name}.$id",
+                                        f"${link_info.lookup_field_name}",
                                     ]
                                 }
                             }

@@ -301,13 +301,13 @@ T = TypeVar("T")
 
 
 class Link(Generic[T]):
-    def __init__(self, ref: DBRef, document_class: Type[T]):
-        self.ref = ref
+    def __init__(self, ref: Any, document_class: Type[T]):
+        self.ref = ref  # Now stores ObjectId instead of DBRef
         self.document_class = document_class
 
     async def fetch(self, fetch_links: bool = False) -> Union[T, Link[T]]:
         result = await self.document_class.get(  # type: ignore
-            self.ref.id, with_children=True, fetch_links=fetch_links
+            self.ref, with_children=True, fetch_links=fetch_links
         )
         return result or self
 
@@ -339,7 +339,7 @@ class Link(Generic[T]):
                         raise ValueError(
                             "All the links must have the same model class"
                         )
-                ids_to_fetch.append(link.ref.id)
+                ids_to_fetch.append(link.ref)
 
         if ids_to_fetch:
             fetched_models = await document_class.find(  # type: ignore
@@ -360,7 +360,7 @@ class Link(Generic[T]):
         result = OrderedDict()
         for link in links:
             if isinstance(link, Link):
-                result[link.ref.id] = link
+                result[link.ref] = link
             else:
                 result[link.id] = link
         return result
@@ -393,17 +393,14 @@ class Link(Generic[T]):
                 )
 
                 if isinstance(v, DBRef):
-                    return cls(ref=v, document_class=document_class)
+                    return cls(ref=v.id, document_class=document_class)
                 if isinstance(v, Link):
                     return v
                 if isinstance(v, dict) and v.keys() == {"id", "collection"}:
                     return cls(
-                        ref=DBRef(
-                            collection=v["collection"],
-                            id=TypeAdapter(
-                                document_class.model_fields["id"].annotation
-                            ).validate_python(v["id"]),
-                        ),
+                        ref=TypeAdapter(
+                            document_class.model_fields["id"].annotation
+                        ).validate_python(v["id"]),
                         document_class=document_class,
                     )
                 if isinstance(v, dict) or isinstance(v, BaseModel):
@@ -413,10 +410,7 @@ class Link(Generic[T]):
                 new_id = TypeAdapter(
                     document_class.model_fields["id"].annotation
                 ).validate_python(v)
-                ref = DBRef(
-                    collection=document_class.get_collection_name(), id=new_id
-                )
-                return cls(ref=ref, document_class=document_class)
+                return cls(ref=new_id, document_class=document_class)
 
             return validate
 
@@ -465,7 +459,7 @@ class Link(Generic[T]):
             )
 
             if isinstance(v, DBRef):
-                return cls(ref=v, document_class=document_class)
+                return cls(ref=v.id, document_class=document_class)
             if isinstance(v, Link):
                 return v
             if isinstance(v, dict) or isinstance(v, BaseModel):
@@ -475,10 +469,7 @@ class Link(Generic[T]):
             new_id = parse_object_as(
                 get_field_type(get_model_fields(document_class)["id"]), v
             )
-            ref = DBRef(
-                collection=document_class.get_collection_name(), id=new_id
-            )
-            return cls(ref=ref, document_class=document_class)
+            return cls(ref=new_id, document_class=document_class)
 
         @classmethod
         def __modify_schema__(cls, field_schema: Dict[str, Any]):
@@ -506,7 +497,7 @@ class Link(Generic[T]):
         return self.ref
 
     def to_dict(self):
-        return {"id": str(self.ref.id), "collection": self.ref.collection}
+        return {"id": str(self.ref), "collection": self.document_class.get_collection_name()}
 
 
 if not IS_PYDANTIC_V2:
