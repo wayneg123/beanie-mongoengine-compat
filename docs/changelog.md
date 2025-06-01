@@ -11,7 +11,7 @@ Beanie project
 - The internal representation of `beanie.odm.fields.Link` in Python has changed; `to_ref()` now returns an `ObjectId`
 - For backward compatibility, `DBRef` objects may be accepted during validation when reading old data
 
-[1.30.0]: https://pypi.org/project/beanie/1.30.0
+[1.30.0]: https://pypi.org/project/beanie-mongoengine-compat/1.30.0
 
 ## [1.29.0] - 2025-01-06
 ### Fix serialization of link/backlink and openapi schema generation
