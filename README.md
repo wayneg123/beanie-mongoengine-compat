@@ -1,20 +1,32 @@
-[![Beanie](https://raw.githubusercontent.com/roman-right/beanie/main/assets/logo/white_bg.svg)](https://github.com/roman-right/beanie)
+# Beanie MongoEngine Compatibility Fork
 
 [![shields badge](https://shields.io/badge/-docs-blue)](https://beanie-odm.dev)
-[![pypi](https://img.shields.io/pypi/v/beanie.svg)](https://pypi.python.org/pypi/beanie)
+[![pypi](https://img.shields.io/pypi/v/beanie-mongoengine-compat.svg)](https://pypi.python.org/pypi/beanie-mongoengine-compat)
 
-## 📢 Important Update 📢
+## 🔗 MongoEngine Compatibility Changes
 
-We are excited to announce that Beanie is transitioning from solo development to a team-based approach! This move will help us enhance the project with new features and more collaborative development.
+This is a fork of the original [Beanie ODM](https://github.com/roman-right/beanie) with modifications to make Links compatible with MongoEngine. 
 
-At this moment we are establishing a board of members that will decide all the future steps of the project. We are looking for contributors and maintainers to join the board.
+### Key Changes:
+- **Link values changed from DBRef to ObjectId**: Links now store `ObjectId('XXX')` instead of `DBRef('RefCollectionName', ObjectId('XXX'))`
+- **Improved mongoengine compatibility**: Easier migration from mongoengine projects
+- **Same API**: All other Beanie functionality remains unchanged
 
-### Join Us
-If you are interested in contributing or want to stay updated, please join our Discord channel. We're looking forward to your ideas and contributions!
+### Migration from Original Beanie:
+If you're migrating from the original Beanie, your existing data will continue to work. The change only affects how new Link references are stored.
 
-[Join our Discord](https://discord.gg/AwwTrbCASP)
+### Migration from MongoEngine:
+This fork makes it easier to migrate from MongoEngine projects since the Link storage format is now compatible.
 
-Let’s make Beanie better, together!
+---
+
+## 📢 About the Original Project
+
+This fork is based on [Beanie](https://github.com/roman-right/beanie) by Roman Right. The original project is transitioning from solo development to a team-based approach.
+
+### Join the Original Community
+If you want to contribute to the original project or stay updated:
+[Join the Discord](https://discord.gg/AwwTrbCASP)
 
 ## Overview
 
@@ -37,13 +49,19 @@ There is a synchronous version of Beanie ODM - [Bunnet](https://github.com/roman
 ### PIP
 
 ```shell
-pip install beanie
+pip install beanie-mongoengine-compat
+```
+
+### UV
+
+```shell
+uv add beanie-mongoengine-compat
 ```
 
 ### Poetry
 
 ```shell
-poetry add beanie
+poetry add beanie-mongoengine-compat
 ```
 
 For more installation options (eg: `aws`, `gcp`, `srv` ...) you can look in the [getting started](./docs/getting-started.md#optional-dependencies)
@@ -101,7 +119,14 @@ if __name__ == "__main__":
 
 ### Documentation
 
-- **[Doc](https://beanie-odm.dev/)** - Tutorial, API documentation, and development guidelines.
+- **[Original Doc](https://beanie-odm.dev/)** - Tutorial, API documentation, and development guidelines.
+- **[This Fork](https://github.com/your-username/beanie-mongoengine-compat)** - MongoEngine compatibility fork
+
+### Original Project
+
+- **[GitHub](https://github.com/roman-right/beanie)** - Original Beanie project
+- **[Changelog](https://beanie-odm.dev/changelog)** - Original project changelog
+- **[Discord](https://discord.gg/AwwTrbCASP)** - Original project community
 
 ### Example Projects
 
@@ -129,6 +154,12 @@ Iliya Hosseini](https://github.com/IHosseini083)
   the valuable changes
 - **[Discord](https://discord.gg/AwwTrbCASP)** - ask your questions, share
   ideas or just say `Hello!!`
+
+### Acknowledgments
+
+This project is based on the original [Beanie](https://github.com/roman-right/beanie) project by Roman Right.
+
+This repo is actually a fork of [07pepa's fork](https://github.com/07pepa/beanie) of the original [Beanie](https://github.com/roman-right/beanie) project. Thanks for the `use-uv` work!
 
 ----
 Supported by [JetBrains](https://jb.gg/OpenSource)

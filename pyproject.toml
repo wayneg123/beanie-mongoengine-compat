@@ -2,17 +2,20 @@
 requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
-[project]
+[tool.flit.module]
 name = "beanie"
+
+[project]
+name = "beanie-mongoengine-compat"
 version = "1.29.0"
-description = "Asynchronous Python ODM for MongoDB"
+description = "Asynchronous Python ODM for MongoDB with mongoengine-compatible Links (ObjectId instead of DBRef)"
 readme = "README.md"
 requires-python = ">=3.9,<4.0"
 license = { file="LICENSE" }
 authors = [
     {name = "Roman Right", email = "roman-right@protonmail.com"}
 ]
-keywords = ["mongodb", "odm", "orm", "pydantic", "mongo", "async", "python"]
+keywords = ["mongodb", "odm", "orm", "pydantic", "mongo", "async", "python", "mongoengine", "compatibility"]
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Development Status :: 5 - Production/Stable",
@@ -42,6 +45,8 @@ test = [
     "asgi-lifespan>=1.0.1",
     "httpx>=0.23.0",
     "fastapi>=0.100",
+    "pydantic-settings>=2.9.1",
+    "email-validator>=2.2.0",
 ]
 doc = [
     "Pygments>=2.8.0",
@@ -56,6 +61,7 @@ ci = [
     "requests",
     "types-requests",
 ]
+dev = []
 
 
 [project.optional-dependencies]
@@ -69,8 +75,9 @@ queue = ["beanie-batteries-queue>=0.2"]
 
 
 [project.urls]
-homepage = "https://beanie-odm.dev"
-repository = "https://github.com/roman-right/beanie"
+homepage = "https://github.com/your-username/beanie-mongoengine-compat"
+repository = "https://github.com/your-username/beanie-mongoengine-compat"
+original = "https://github.com/roman-right/beanie"
 
 [project.scripts]
 beanie = "beanie.executors.migrate:migrations"
