@@ -75,8 +75,8 @@ queue = ["beanie-batteries-queue>=0.2"]
 
 
 [project.urls]
-homepage = "https://github.com/your-username/beanie-mongoengine-compat"
-repository = "https://github.com/your-username/beanie-mongoengine-compat"
+homepage = "https://github.com/wayneg123/beanie-mongoengine-compat"
+repository = "https://github.com/wayneg123/beanie-mongoengine-compat"
 original = "https://github.com/roman-right/beanie"
 
 [project.scripts]
