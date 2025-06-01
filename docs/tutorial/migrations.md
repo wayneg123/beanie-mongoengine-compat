@@ -243,3 +243,68 @@ class Backward:
 
 ```
 All the examples of migrations can be found by [link](https://github.com/roman-right/beanie/tree/main/tests/migrations/migrations_for_test)
+
+### Migrating Link Fields from DBRef to ObjectId
+
+**Important**: This is a significant breaking change for users with existing data. Previously, `Link` fields were stored as `DBRef` objects, but now they are stored as direct `ObjectId`s.
+
+If you have existing data with `Link` fields stored as `DBRef`s, you will need to migrate them. Here's how to do it:
+
+#### Iterative Migration Example
+
+```python
+from beanie import Document, iterative_migration, Link
+from typing import Any
+from bson import DBRef
+
+# Temporary model to read old DBRef data
+class OldHouseWithDBRef(Document):
+    name: str
+    door: Any  # Can parse both DBRef and new Link format
+
+    class Settings:
+        name = "houses"  # same collection
+
+class NewHouseWithObjectId(Document):
+    name: str
+    door: Link[Door]  # New Link type storing ObjectId
+
+    class Settings:
+        name = "houses"
+
+class Forward:
+    @iterative_migration()
+    async def migrate_door_link(
+            self, input_document: OldHouseWithDBRef, output_document: NewHouseWithObjectId
+    ):
+        # Handle single link field
+        if isinstance(input_document.door, DBRef):
+            output_document.door = input_document.door.id
+        elif hasattr(input_document.door, 'obj_id'):  # if it parsed into new Link already
+            output_document.door = input_document.door.obj_id
+        
+        # For list of links, handle each item
+        # if hasattr(input_document, 'windows') and input_document.windows:
+        #     output_document.windows = []
+        #     for window_link in input_document.windows:
+        #         if isinstance(window_link, DBRef):
+        #             output_document.windows.append(window_link.id)
+        #         elif hasattr(window_link, 'obj_id'):
+        #             output_document.windows.append(window_link.obj_id)
+
+class Backward:
+    @iterative_migration()
+    async def migrate_door_link_back(
+            self, input_document: NewHouseWithObjectId, output_document: OldHouseWithDBRef
+    ):
+        # Convert ObjectId back to DBRef for backward compatibility
+        if input_document.door:
+            output_document.door = DBRef("doors", input_document.door)
+```
+
+#### Important Notes
+
+- **Backup your data** before running such migrations
+- Test the migration on a copy of your data first
+- The new query syntax for linked documents by ID is: `MyDoc.link_field == object_id` instead of `MyDoc.link_field.id == object_id`
+- Beanie's updated `Link` validation can handle reading old `DBRef` data during the migration process

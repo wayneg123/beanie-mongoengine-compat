@@ -1,6 +1,6 @@
 # Relations
 
-The document can contain links to other documents in their fields.
+The document can contain links to other documents in their fields. Link fields store the `ObjectId` of the referenced document directly in the database, providing better MongoDB compatibility and simplified querying.
 
 *Only top-level fields are fully supported for now.*
 
@@ -179,7 +179,7 @@ Search by `id` of the linked documents works using the following syntax:
 
 ```python
 houses = await House.find(
-    House.door.id == PydanticObjectId("DOOR_ID_HERE")
+    House.door == PydanticObjectId("DOOR_ID_HERE")
 ).to_list()
 ```
 
@@ -227,7 +227,7 @@ Also, you can set up the maximum nesting depth on the document definition level.
 
 ### On-demand fetch
 
-If you don't use prefetching, linked documents will be presented as objects of the `Link` class. 
+If you don't use prefetching, linked documents will be presented as objects of the `Link` class. This `Link` object internally holds the `ObjectId` of the referenced document rather than a `DBRef` instance.
 
 You can fetch them manually afterwards.
 
@@ -292,7 +292,7 @@ class Person(Document):
     house: List[BackLink[House]] = Field(original_field="owners")
 ```
 
-The `original_field` parameter is required for the back link field.
+The `original_field` parameter is required for the back link field. The `original_field="door"` refers to the `door` field in `House` which now stores an `ObjectId` directly.
 
 Back links support all the operations that normal links support, but are virtual. This means that when searching the database, you will need to include `fetch_links=True` (see [Finding documents](/tutorial/finding-documents).), or you will recieve an empty 'BackLink' virtual object. It is not possible to `fetch()` this virtual link after the initial search.
 

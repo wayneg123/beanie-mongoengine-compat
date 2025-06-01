@@ -7,7 +7,7 @@ name = "beanie"
 
 [project]
 name = "beanie-mongoengine-compat"
-version = "1.29.0"
+version = "1.30.0"
 description = "Asynchronous Python ODM for MongoDB with mongoengine-compatible Links (ObjectId instead of DBRef)"
 readme = "README.md"
 requires-python = ">=3.9,<4.0"
